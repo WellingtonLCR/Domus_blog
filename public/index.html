@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Blog - Sistema Completo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm" id="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showPage('home')">
+                <i class="fas fa-blog me-2"></i>Mini Blog
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" id="navHome" class="d-none">
+                        <a class="nav-link" href="#" onclick="showPage('home')" aria-label="Página inicial">
+                            <i class="fas fa-home me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navPosts" class="d-none">
+                        <a class="nav-link" href="#" onclick="showPage('posts')" aria-label="Gerenciar posts">
+                            <i class="fas fa-newspaper me-1"></i>Posts
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navUsers" class="d-none">
+                        <a class="nav-link" href="#" onclick="showPage('users')" aria-label="Gerenciar usuários">
+                            <i class="fas fa-users me-1"></i>Usuários
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navComments" class="d-none">
+                        <a class="nav-link" href="#" onclick="showPage('comments')" aria-label="Ver comentários">
+                            <i class="fas fa-comments me-1"></i>Comentários
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown" id="userDropdown" class="d-none">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu do usuário">
+                            <i class="fas fa-user me-1"></i><span id="userNameDisplay">Usuário</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="showProfile()" aria-label="Ver meu perfil">
+                                <i class="fas fa-user-circle me-2"></i>Meu Perfil
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()" aria-label="Sair do sistema">
+                                <i class="fas fa-sign-out-alt me-2"></i>Sair
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mt-4">
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">
+                                <i class="fas fa-blog text-primary"></i><br>
+                                Mini Blog
+                            </h3>
+                            
+                            <!-- Login Tabs -->
+                            <ul class="nav nav-tabs" id="loginTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin-login" type="button" role="tab" aria-controls="admin-login" aria-selected="true">
+                                        Admin
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="usuario-tab" data-bs-toggle="tab" data-bs-target="#usuario-login" type="button" role="tab" aria-controls="usuario-login" aria-selected="false">
+                                        Usuário
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content mt-3" id="loginTabContent">
+                                <!-- Admin Login -->
+                                <div class="tab-pane fade show active" id="admin-login" role="tabpanel" aria-labelledby="admin-tab">
+                                    <form id="adminLoginForm">
+                                        <div class="mb-3">
+                                            <label for="adminUsuario" class="form-label">Usuário</label>
+                                            <input type="text" class="form-control" id="adminUsuario" required placeholder="Digite seu usuário">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="adminSenha" class="form-label">Senha</label>
+                                            <input type="password" class="form-control" id="adminSenha" required placeholder="Digite sua senha">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100" aria-label="Entrar como administrador">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Entrar como Admin
+                                        </button>
+                                    </form>
+                                    <div class="text-center mt-3">
+                                        <button type="button" class="btn btn-link p-0" onclick="showCreateUserModal()" aria-label="Criar um novo usuário">
+                                            Criar novo usuário
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Usuário Login -->
+                                <div class="tab-pane fade" id="usuario-login" role="tabpanel" aria-labelledby="usuario-tab">
+                                    <form id="usuarioLoginForm">
+                                        <div class="mb-3">
+                                            <label for="usuarioUsuario" class="form-label">Usuário</label>
+                                            <input type="text" class="form-control" id="usuarioUsuario" required placeholder="Digite seu usuário">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="usuarioSenha" class="form-label">Senha</label>
+                                            <input type="password" class="form-control" id="usuarioSenha" required placeholder="Digite sua senha">
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100" aria-label="Entrar como usuário">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Entrar como Usuário
+                                        </button>
+                                    </form>
+                                    <div class="text-center mt-3">
+                                        <button type="button" class="btn btn-link p-0" onclick="showCreateUserModal()" aria-label="Criar um novo usuário">
+                                            Criar novo usuário
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <small class="text-muted">
+                                    Admin: admin / admin123<br>
+                                    Usuários: joao, maria, pedro, ana, carlos / senha123
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="homePage" class="page d-none">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-home me-2"></i>Dashboard</h2>
+                        <div>
+                            <button class="btn btn-success" onclick="showCreatePostModal()">
+                                <i class="fas fa-plus me-2"></i>Novo Post
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="card stats-card bg-primary text-white shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-newspaper me-2"></i>Posts</h5>
+                                    <h3 id="totalPosts">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card stats-card bg-success text-white shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-users me-2"></i>Usuários Ativos</h5>
+                                    <h3 id="totalUsers">0</h3>
+                                    <small class="d-block mt-1">Banidos: <span id="bannedUsers">0</span></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card stats-card bg-info text-white shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-comments me-2"></i>Comentários</h5>
+                                    <h3 id="totalComments">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card stats-card bg-warning text-white shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-eye me-2"></i>Posts Publicados</h5>
+                                    <h3 id="publishedPosts">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Posts -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Posts Recentes</h4>
+                        <small class="text-muted">Últimos posts publicados no sistema</small>
+                    </div>
+                    <div id="recentPosts" class="row">
+                        <!-- Posts serão carregados via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts Page -->
+        <div id="postsPage" class="page d-none">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-newspaper me-2"></i>Posts</h2>
+                        <div>
+                            <button class="btn btn-success" onclick="showCreatePostModal()">
+                                <i class="fas fa-plus me-2"></i>Novo Post
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="statusFilter" aria-label="Filtrar por status">
+                                        <option value="">Todos os status</option>
+                                        <option value="rascunho">Rascunho</option>
+                                        <option value="publicado">Publicado</option>
+                                        <option value="arquivado">Arquivado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="searchPosts" placeholder="Buscar posts..." aria-label="Buscar posts">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" onclick="loadPosts()" aria-label="Aplicar filtros">
+                                        <i class="fas fa-search me-2"></i>Filtrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Posts List -->
+                    <div id="postsList">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Page -->
+        <div id="usersPage" class="page d-none">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-users me-2"></i>Usuários</h2>
+                        <div>
+                            <button class="btn btn-success" onclick="showCreateUserModal()" aria-label="Criar novo usuário">
+                                <i class="fas fa-plus me-2"></i>Novo Usuário
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Users List -->
+                    <div id="usersList">
+                        <!-- Users will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Page -->
+        <div id="commentsPage" class="page d-none">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="fas fa-comments me-2"></i>Comentários</h2>
+                    
+                    <!-- Comments List -->
+                    <div id="commentsList">
+                        <!-- Comments will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Post Modal -->
+    <div class="modal fade" id="createPostModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Novo Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createPostForm">
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="postTitle" required placeholder="Digite o título do post">
+                        </div>
+                        <div class="mb-3">
+                            <label for="postStatus" class="form-label">Status</label>
+                            <select class="form-select" id="postStatus" aria-label="Selecionar status do post">
+                                <option value="rascunho">Rascunho</option>
+                                <option value="publicado">Publicado</option>
+                                <option value="arquivado">Arquivado</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label">Conteúdo</label>
+                            <textarea class="form-control" id="postContent" rows="10" required placeholder="Digite o conteúdo do post"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="savePostButton" onclick="savePost()">Criar Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Post Modal -->
+    <div class="modal fade" id="viewPostModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewPostTitle">Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-muted mb-3" id="viewPostMeta"></div>
+                    <div id="viewPostContent" class="text-break mb-3"></div>
+                    <hr>
+                    <div class="comments-section">
+                        <h6 class="mb-3"><i class="fas fa-comments me-2"></i>Comentários</h6>
+                        <div id="postCommentsList" class="mb-3">
+                            <!-- Comentários serão carregados aqui -->
+                        </div>
+                        <div id="postCommentFormWrapper" class="mb-2 d-none">
+                            <label for="newCommentText" class="form-label">Adicionar comentário</label>
+                            <textarea class="form-control mb-2" id="newCommentText" rows="3" placeholder="Escreva seu comentário..."></textarea>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="submitComment()">
+                                <i class="fas fa-paper-plane me-1"></i>Enviar comentário
+                            </button>
+                        </div>
+                        <small id="commentsHint" class="text-muted"></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div class="modal fade" id="createUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Novo Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createUserForm">
+                        <div class="mb-3">
+                            <label for="newUserName" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="newUserName" required placeholder="Digite o nome completo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserUsuario" class="form-label">Usuário</label>
+                            <input type="text" class="form-control" id="newUserUsuario" required placeholder="Digite o nome de usuário">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserSenha" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="newUserSenha" required placeholder="Digite a senha">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserBiografia" class="form-label">Biografia</label>
+                            <textarea class="form-control" id="newUserBiografia" rows="3" placeholder="Digite uma breve biografia (opcional)"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="createUser()">Criar Usuário</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">Mini Blog</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fechar" title="Fechar"></button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js?v=2.0"></script>
+</body>
+</html>
