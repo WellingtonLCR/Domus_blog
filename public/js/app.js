@@ -856,6 +856,75 @@ async function unbanUser(id) {
     }
 }
 
-function showProfile() {
-    showToast(`Perfil de ${currentUser.nome}`, 'info');
+async function showProfile() {
+    if (!currentUser || !authToken) {
+        showToast('É necessário estar autenticado para editar o perfil.', 'warning');
+        return;
+    }
+
+    // Preenche o modal com os dados atuais do usuário em memória
+    const nameInput = document.getElementById('profileName');
+    const usuarioInput = document.getElementById('profileUsuario');
+    const bioInput = document.getElementById('profileBiografia');
+    const senhaInput = document.getElementById('profileSenha');
+
+    if (nameInput) nameInput.value = currentUser.nome || '';
+    if (usuarioInput) usuarioInput.value = currentUser.usuario || '';
+    if (bioInput) bioInput.value = currentUser.biografia || '';
+    if (senhaInput) senhaInput.value = '';
+
+    const modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+    modal.show();
+}
+
+async function saveProfile() {
+    if (!currentUser || !authToken) {
+        showToast('É necessário estar autenticado para editar o perfil.', 'warning');
+        return;
+    }
+
+    const nameInput = document.getElementById('profileName');
+    const bioInput = document.getElementById('profileBiografia');
+    const senhaInput = document.getElementById('profileSenha');
+
+    const payload = {
+        nome: nameInput ? nameInput.value : currentUser.nome,
+        biografia: bioInput ? bioInput.value : currentUser.biografia
+    };
+
+    // Só envia senha se o usuário informou uma nova
+    if (senhaInput && senhaInput.value.trim()) {
+        payload.senha = senhaInput.value.trim();
+    }
+
+    try {
+        // Define endpoint conforme o tipo de usuário logado
+        let endpoint = '';
+        if (currentUser.type === 'admin') {
+            endpoint = `/admins/${currentUser.id}`;
+        } else {
+            endpoint = `/usuarios/${currentUser.id}`;
+        }
+
+        const response = await apiRequest(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(payload)
+        });
+
+        // Atualiza o currentUser no frontend com os dados retornados, se houver
+        const updated = response.data || {};
+        currentUser.nome = updated.nome || payload.nome;
+        currentUser.biografia = updated.biografia ?? payload.biografia;
+
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateNavbar();
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+        if (modal) modal.hide();
+
+        showToast('Perfil atualizado com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao atualizar perfil:', error);
+        showToast(error?.message || 'Erro ao atualizar perfil', 'error');
+    }
 }

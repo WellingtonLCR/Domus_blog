@@ -325,6 +325,42 @@
         </div>
     </div>
 
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Meu Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="mb-3">
+                            <label for="profileName" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="profileName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileUsuario" class="form-label">Usuário</label>
+                            <input type="text" class="form-control" id="profileUsuario" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileBiografia" class="form-label">Biografia</label>
+                            <textarea class="form-control" id="profileBiografia" rows="3" placeholder="Conte um pouco sobre você (opcional)"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileSenha" class="form-label">Nova senha</label>
+                            <input type="password" class="form-control" id="profileSenha" placeholder="Preencha somente se desejar alterar a senha">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProfile()">Salvar alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- View Post Modal -->
     <div class="modal fade" id="viewPostModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
