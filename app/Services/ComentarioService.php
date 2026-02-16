@@ -63,6 +63,19 @@ class ComentarioService
             ->paginate($perPage);
     }
 
+    /**
+     * Comentários dos posts cujo autor é o usuário informado.
+     */
+    public function getByPostAuthor(Usuario $autor, int $perPage = 15)
+    {
+        return Comentario::with(['usuario', 'post.usuario'])
+            ->whereHas('post', function (Builder $q) use ($autor) {
+                $q->where('usuario_id', $autor->id);
+            })
+            ->orderBy('data_criacao', 'desc')
+            ->paginate($perPage);
+    }
+
     public function getByUser(Usuario $usuario, int $perPage = 15)
     {
         return $usuario->comentarios()

@@ -95,4 +95,16 @@ class ComentarioController extends Controller
             'data' => ComentarioResource::collection($comentarios)
         ], 200);
     }
+
+    public function commentsOnMyPosts(Request $request): JsonResponse
+    {
+        $usuario = $request->user();
+        $perPage = $request->get('per_page', 15);
+        $comentarios = $this->comentarioService->getByPostAuthor($usuario, $perPage);
+
+        return response()->json([
+            'message' => 'Comentários nos seus posts recuperados com sucesso',
+            'data' => ComentarioResource::collection($comentarios)
+        ], 200);
+    }
 }

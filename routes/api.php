@@ -65,8 +65,12 @@ Route::middleware(['auth:sanctum', 'auth.banned'])->group(function () {
     Route::prefix('comentarios')->group(function () {
         Route::get('/', [ComentarioController::class, 'index']);
         Route::post('/', [ComentarioController::class, 'store']);
+
+        // Rotas específicas devem vir antes da rota parametrizada {comentario}
+        Route::get('my-comments', [ComentarioController::class, 'myComments']);
+        Route::get('my-posts', [ComentarioController::class, 'commentsOnMyPosts']);
+
         Route::get('{comentario}', [ComentarioController::class, 'show']);
         Route::delete('{comentario}', [ComentarioController::class, 'destroy']);
-        Route::get('my-comments', [ComentarioController::class, 'myComments']);
     });
 });

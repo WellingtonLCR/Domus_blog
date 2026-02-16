@@ -548,13 +548,22 @@ async function loadComments() {
     try {
         const container = document.getElementById('commentsList');
 
-        if (!authToken || !currentUser || currentUser.type !== 'admin') {
-            container.innerHTML = '<p class="text-muted">Apenas administradores podem visualizar o painel completo de comentários.</p>';
+        if (!authToken || !currentUser) {
+            container.innerHTML = '<p class="text-muted">Faça login para visualizar comentários.</p>';
             return;
         }
 
-        const response = await apiRequest('/comentarios');
-        const comentarios = response.data || [];
+        let comentarios = [];
+
+        if (currentUser.type === 'admin') {
+            // Admin visualiza o painel completo de comentários
+            const response = await apiRequest('/comentarios');
+            comentarios = response.data || [];
+        } else {
+            // Usuário comum visualiza comentários feitos nos seus próprios posts
+            const response = await apiRequest('/comentarios/my-posts');
+            comentarios = response.data || [];
+        }
 
         if (!comentarios.length) {
             container.innerHTML = `
