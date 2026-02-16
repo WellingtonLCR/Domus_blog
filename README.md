@@ -244,6 +244,20 @@ Content-Type: application/json
 }
 ```
 
+#### Meus Comentários
+```
+GET /api/comentarios/my-comments
+Authorization: Bearer {token}
+```
+- Retorna os comentários feitos pelo usuário autenticado.
+
+#### Comentários nos Meus Posts
+```
+GET /api/comentarios/my-posts
+Authorization: Bearer {token}
+```
+- Retorna comentários feitos em posts cujo autor é o usuário autenticado.
+
 #### Login Usuário
 ```
 POST /api/auth/usuario/login
@@ -378,3 +392,51 @@ Content-Type: application/json
 - **ana** - senha123
 - **carlos** - senha123
 
+---
+
+## Funcionalidades do Frontend (SPA)
+
+O projeto inclui uma SPA simples em `public/index.html` + `public/js/app.js` que consome diretamente a API.
+
+- **Login duplo (Admin / Usuário)**
+  - Abas separadas para login de admin e usuário.
+  - Após login, o token é armazenado em `localStorage` e usado nas chamadas via `Authorization: Bearer`.
+
+- **Dashboard**
+  - Cards com indicadores:
+    - Total de posts publicados.
+    - Usuários ativos e quantidade de banidos.
+    - Total de comentários (somente para admin autenticado).
+  - Lista de **posts recentes** com botão "Ver" abrindo modal detalhado (conteúdo + comentários).
+
+- **Gestão de Posts**
+  - Listagem completa de posts (rota `/api/posts`).
+  - Filtros no topo da página:
+    - `status`: rascunho / publicado / arquivado / todos.
+    - Busca textual em título e conteúdo.
+  - Criação/edição via modal:
+    - Admin pode gerenciar qualquer post.
+    - Usuário comum pode gerenciar apenas os próprios posts.
+
+- **Comentários**
+  - Dentro do modal de post:
+    - Exibição dos comentários daquele post.
+    - Usuário autenticado pode criar comentários.
+    - Admin ou autor do comentário podem excluir o comentário.
+  - Aba **Comentários**:
+    - **Admin**: painel global (`GET /api/comentarios`).
+    - **Usuário**: comentários feitos nos **seus posts** (`GET /api/comentarios/my-posts`).
+
+- **Gestão de Usuários (admin)**
+  - Listagem de usuários com biografia e indicação de banidos.
+  - Botões para **banir/desbanir** usuários (consome `POST /api/usuarios/{id}/ban|unban`).
+
+- **Perfil do Usuário (Meu Perfil)**
+  - Item de menu "Meu Perfil" abre modal de edição de cadastro.
+  - Permite alterar:
+    - Nome.
+    - Biografia.
+    - Senha (opcional; enviada somente se informada).
+  - Endpoints utilizados:
+    - Admin: `PUT /api/admins/{id}`.
+    - Usuário comum: `PUT /api/usuarios/{id}`.
